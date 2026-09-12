@@ -1,0 +1,10 @@
+{
+  "name": "Remix Remix ProcureEase2",
+  "description": "Farmer Procurement Status \u0026 Scheduling platform with real-time queue tracking, digital token generation, and smart automation.",
+  "requestFramePermissions": [
+    "microphone"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

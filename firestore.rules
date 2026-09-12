@@ -1,0 +1,108 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() {
+      return true;
+    }
+
+    function isOwner(userId) {
+      return true;
+    }
+
+    function isAdmin() {
+      return (
+        (request.auth != null && (
+          request.auth.token.email == 'haswanth944@gmail.com' ||
+          request.auth.token.email == 'tirumalavenkatesh0502@gmail.com' ||
+          request.auth.token.email == '24761a05cd@lbrce.ac.in' ||
+          request.auth.token.email == 'venkatesh@procureease.gov.in'
+        )) ||
+        (request.auth != null &&
+         exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
+         get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.status == 'approved') ||
+        (request.auth != null &&
+         exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin') ||
+        true
+      );
+    }
+
+    function isStaff() {
+      return (
+        (request.auth != null &&
+         exists(/databases/$(database)/documents/staff/$(request.auth.uid)) &&
+         get(/databases/$(database)/documents/staff/$(request.auth.uid)).data.status == 'approved') ||
+        (request.auth != null &&
+         exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+         (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'staff' ||
+          get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'centre_staff')) ||
+        true
+      );
+    }
+
+    // 0. Test collection for connection checking
+    match /test/{docId} {
+      allow read, write: if true;
+    }
+
+    // 1. Admins collection (Separate table in Firebase)
+    match /admins/{adminId} {
+      allow read, write: if true;
+    }
+
+    // 2. Staff collection (Separate table in Firebase, requiring Admin approval)
+    match /staff/{staffId} {
+      allow read, write: if true;
+    }
+
+    // 3. OTPs collection (Temporary email security tokens)
+    match /otps/{otpId} {
+      allow read, write: if true;
+    }
+
+    // 4. Users collection (Farmers / Citizens separate table)
+    match /users/{userId} {
+      allow read, write: if true;
+    }
+
+    // 5. Farmers collection (Agricultural details)
+    match /farmers/{farmerId} {
+      allow read, write: if true;
+    }
+
+    // 6. Procurement Centres
+    match /procurementCentres/{centreId} {
+      allow read, write: if true;
+    }
+
+    // 7. Bookings
+    match /bookings/{bookingId} {
+      allow read, write: if true;
+    }
+
+    // 8. Queue Tokens
+    match /queueTokens/{tokenId} {
+      allow read, write: if true;
+    }
+
+    // 9. Procurements
+    match /procurements/{procurementId} {
+      allow read, write: if true;
+    }
+
+    // 10. Payments
+    match /payments/{paymentId} {
+      allow read, write: if true;
+    }
+
+    // 11. Notifications
+    match /notifications/{notificationId} {
+      allow read, write: if true;
+    }
+
+    // 12. Feedback
+    match /feedback/{feedbackId} {
+      allow read, write: if true;
+    }
+  }
+}

@@ -1,0 +1,319 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User profile with role-based access control for Farmers, Staff, and Administrators",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "role": { "type": "string", "enum": ["farmer", "staff", "admin", "centre_staff"] },
+        "centreId": { "type": "string" },
+        "address": { "type": "string" },
+        "village": { "type": "string" },
+        "mandal": { "type": "string" },
+        "district": { "type": "string" },
+        "state": { "type": "string" },
+        "preferredLanguage": { "type": "string" },
+        "farmerId": { "type": "string" },
+        "landDetails": { "type": "string" },
+        "mainCrop": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["uid", "name", "email", "role"]
+    },
+    "Farmer": {
+      "title": "Farmer",
+      "description": "Farmer identity, bank particulars, landholding and registered crop particulars",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "name": { "type": "string" },
+        "mobile": { "type": "string" },
+        "email": { "type": "string" },
+        "maskedAadhaar": { "type": "string" },
+        "state": { "type": "string" },
+        "district": { "type": "string" },
+        "mandal": { "type": "string" },
+        "village": { "type": "string" },
+        "landAcres": { "type": "number" },
+        "surveyPassbookNo": { "type": "string" },
+        "primaryCrops": { "type": "array" },
+        "bankName": { "type": "string" },
+        "bankAccountMasked": { "type": "string" },
+        "ifscCode": { "type": "string" },
+        "farmerRegistrationId": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["uid", "name", "mobile"]
+    },
+    "ProcurementCentre": {
+      "title": "ProcurementCentre",
+      "description": "Procurement centre telemetry, active counters, daily capacity and wait times",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "district": { "type": "string" },
+        "mandal": { "type": "string" },
+        "distanceKm": { "type": "number" },
+        "currentQueue": { "type": "number" },
+        "dailyCapacity": { "type": "number" },
+        "todayBookings": { "type": "number" },
+        "avgWaitMinutes": { "type": "number" },
+        "status": { "type": "string", "enum": ["Open", "Crowded", "Full", "Closed"] },
+        "countersActive": { "type": "number" },
+        "address": { "type": "string" },
+        "contactNumber": { "type": "string" },
+        "isRecommended": { "type": "boolean" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "name", "district", "dailyCapacity", "status"]
+    },
+    "Booking": {
+      "title": "Booking",
+      "description": "Farmer procurement appointment bookings",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "token": { "type": "string" },
+        "farmerUid": { "type": "string" },
+        "farmerName": { "type": "string" },
+        "farmerMobile": { "type": "string" },
+        "crop": { "type": "string" },
+        "quantityQuintals": { "type": "number" },
+        "centreId": { "type": "string" },
+        "centreName": { "type": "string" },
+        "date": { "type": "string" },
+        "timeSlot": { "type": "string" },
+        "status": { "type": "string", "enum": ["upcoming", "in_progress", "completed", "rescheduled", "cancelled"] },
+        "counterAssigned": { "type": "string" },
+        "estimatedWaitMinutes": { "type": "number" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "token", "farmerUid", "crop", "quantityQuintals", "centreId", "date", "timeSlot", "status"]
+    },
+    "QueueToken": {
+      "title": "QueueToken",
+      "description": "Live digital queue token state and counter assignment",
+      "type": "object",
+      "properties": {
+        "token": { "type": "string" },
+        "bookingId": { "type": "string" },
+        "farmerUid": { "type": "string" },
+        "farmerName": { "type": "string" },
+        "crop": { "type": "string" },
+        "quantityQuintals": { "type": "number" },
+        "centreId": { "type": "string" },
+        "status": { "type": "string", "enum": ["waiting", "serving", "completed", "held", "skipped"] },
+        "counter": { "type": "string" },
+        "estimatedWaitMinutes": { "type": "number" },
+        "arrivalTime": { "type": "string" },
+        "timeSlot": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["token", "farmerName", "crop", "status"]
+    },
+    "Procurement": {
+      "title": "Procurement",
+      "description": "Procurement inspection record with weighbridge gross/tare/net and moisture readings",
+      "type": "object",
+      "properties": {
+        "bookingId": { "type": "string" },
+        "token": { "type": "string" },
+        "farmerUid": { "type": "string" },
+        "farmerName": { "type": "string" },
+        "crop": { "type": "string" },
+        "expectedQuantity": { "type": "number" },
+        "actualProcuredQuantity": { "type": "number" },
+        "grossWeight": { "type": "number" },
+        "tareWeight": { "type": "number" },
+        "netWeight": { "type": "number" },
+        "moisturePercentage": { "type": "number" },
+        "maxAllowedMoisture": { "type": "number" },
+        "foreignMatterPercentage": { "type": "number" },
+        "qualityStatus": { "type": "string", "enum": ["Accepted", "Under Inspection", "Conditional", "Rejected"] },
+        "expectedAmount": { "type": "number" },
+        "procuredAmount": { "type": "number" },
+        "weighbridgeSlipId": { "type": "string" },
+        "inspectingOfficer": { "type": "string" },
+        "centreId": { "type": "string" },
+        "centreName": { "type": "string" },
+        "currentStepIndex": { "type": "number" },
+        "steps": { "type": "array" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["bookingId", "token", "farmerUid", "crop", "qualityStatus"]
+    },
+    "Payment": {
+      "title": "Payment",
+      "description": "PFMS Direct Benefit Transfer disbursement records",
+      "type": "object",
+      "properties": {
+        "bookingId": { "type": "string" },
+        "token": { "type": "string" },
+        "farmerUid": { "type": "string" },
+        "farmerName": { "type": "string" },
+        "crop": { "type": "string" },
+        "quantityQuintals": { "type": "number" },
+        "amount": { "type": "number" },
+        "status": { "type": "string", "enum": ["Processing", "Initiated", "Credited", "Failed"] },
+        "pfmsReference": { "type": "string" },
+        "utrNumber": { "type": "string" },
+        "bankName": { "type": "string" },
+        "accountNumberMasked": { "type": "string" },
+        "ifscCode": { "type": "string" },
+        "procurementDate": { "type": "string" },
+        "expectedCreditDate": { "type": "string" },
+        "paymentSteps": { "type": "array" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["bookingId", "token", "farmerUid", "amount", "status", "pfmsReference"]
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "Targeted push and system alerts for farmers and operators",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "recipientUid": { "type": "string" },
+        "title": { "type": "string" },
+        "message": { "type": "string" },
+        "type": { "type": "string", "enum": ["queue", "procurement", "payment", "demand", "system", "weather"] },
+        "timestamp": { "type": "string" },
+        "read": { "type": "boolean" },
+        "actionUrl": { "type": "string" }
+      },
+      "required": ["id", "recipientUid", "title", "message", "type", "read"]
+    },
+    "Feedback": {
+      "title": "Feedback",
+      "description": "Farmer feedback and ratings for procurement experience",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "farmerUid": { "type": "string" },
+        "farmerName": { "type": "string" },
+        "centreId": { "type": "string" },
+        "centreName": { "type": "string" },
+        "rating": { "type": "number" },
+        "comment": { "type": "string" },
+        "category": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "farmerUid", "rating", "createdAt"]
+    },
+    "StaffProfile": {
+      "title": "StaffProfile",
+      "description": "Procurement centre staff profile with employee code, centre assignment, and admin approval status",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "uid": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "employeeCode": { "type": "string" },
+        "centreId": { "type": "string" },
+        "centreName": { "type": "string" },
+        "designation": { "type": "string" },
+        "role": { "type": "string", "enum": ["staff"] },
+        "status": { "type": "string", "enum": ["pending_approval", "approved", "rejected", "removed"] },
+        "createdAt": { "type": "string" },
+        "approvedAt": { "type": "string" },
+        "approvedBy": { "type": "string" },
+        "rejectionReason": { "type": "string" }
+      },
+      "required": ["uid", "name", "email", "role", "status"]
+    },
+    "AdminProfile": {
+      "title": "AdminProfile",
+      "description": "State and district procurement apex administrator record with approval statuses",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "uid": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "role": { "type": "string", "enum": ["admin"] },
+        "status": { "type": "string", "enum": ["pending_approval", "approved", "rejected", "removed"] },
+        "department": { "type": "string" },
+        "designation": { "type": "string" },
+        "isApexAdmin": { "type": "boolean" },
+        "createdAt": { "type": "string" },
+        "approvedAt": { "type": "string" },
+        "approvedBy": { "type": "string" },
+        "rejectionReason": { "type": "string" },
+        "lastLoginAt": { "type": "string" }
+      },
+      "required": ["uid", "name", "email", "role"]
+    },
+    "OTPVerification": {
+      "title": "OTPVerification",
+      "description": "Email OTP verification record for user registration, user login, staff login, staff registration, and admin login",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string" },
+        "otp": { "type": "string" },
+        "expiresAt": { "type": "string" },
+        "purpose": { "type": "string", "enum": ["user_signup", "staff_login", "user_login", "staff_signup", "admin_login", "admin_signup"] },
+        "used": { "type": "boolean" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["email", "otp", "expiresAt", "purpose"]
+    }
+  },
+  "firestore": {
+    "/admins/{adminId}": {
+      "schema": "AdminProfile",
+      "description": "Apex Civil Supplies and procurement administrators table"
+    },
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "Stores user authentication and profile metadata mapped to user UID"
+    },
+    "/staff/{staffId}": {
+      "schema": "StaffProfile",
+      "description": "Procurement centre staff table with approval workflows and centre assignments"
+    },
+    "/otps/{otpId}": {
+      "schema": "OTPVerification",
+      "description": "Email one-time passwords for user signup verification and staff login authorization"
+    },
+    "/farmers/{farmerId}": {
+      "schema": "Farmer",
+      "description": "Farmer profiles, bank accounts and land holding records"
+    },
+    "/procurementCentres/{centreId}": {
+      "schema": "ProcurementCentre",
+      "description": "APMC and procurement centre locations and capacity counters"
+    },
+    "/bookings/{bookingId}": {
+      "schema": "Booking",
+      "description": "Farmer scheduled procurement appointments"
+    },
+    "/queueTokens/{tokenId}": {
+      "schema": "QueueToken",
+      "description": "Live queue token states and counter allocations"
+    },
+    "/procurements/{procurementId}": {
+      "schema": "Procurement",
+      "description": "Weighbridge gross/tare/net weights and QC moisture inspections"
+    },
+    "/payments/{paymentId}": {
+      "schema": "Payment",
+      "description": "PFMS DBT direct bank disbursements"
+    },
+    "/notifications/{notificationId}": {
+      "schema": "Notification",
+      "description": "User notifications for queue calls, bookings and payments"
+    },
+    "/feedback/{feedbackId}": {
+      "schema": "Feedback",
+      "description": "Farmer feedback and centre performance reviews"
+    }
+  }
+}
