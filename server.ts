@@ -12,6 +12,9 @@ if (fs.existsSync('.env')) {
 
 // Read configuration prioritizing .env, then .env.example (user-provided values), then process.env
 function getActiveEnv(key: string): string {
+  if (process.env[key] && process.env[key]!.trim()) {
+    return process.env[key]!.trim();
+  }
   if (fs.existsSync('.env')) {
     try {
       const content = fs.readFileSync('.env', 'utf-8');
